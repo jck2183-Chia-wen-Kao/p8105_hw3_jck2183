@@ -59,3 +59,17 @@ instacart %>%
 ```
 
 
+- Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
+
+```{r}
+instacart %>% 
+  janitor::clean_names() %>% 
+  filter(product_name %in% c("Pink Lady Apples", "Coffee Ice Cream")) %>% 
+  select(product_name, order_dow, order_hour_of_day) %>% 
+  group_by(product_name,order_dow) %>% 
+  summarise(avg_hour = round(mean(order_hour_of_day), 2)) %>% 
+  spread(key = order_dow, value = avg_hour) %>% 
+  rename("product name" = product_name) %>%
+  knitr::kable()
+```
+
