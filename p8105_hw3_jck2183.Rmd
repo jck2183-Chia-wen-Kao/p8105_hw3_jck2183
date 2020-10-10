@@ -105,4 +105,12 @@ accel_df %>%
 ```
 After tidying the dataset, we can find that most activities reside in weekdays, particularly when approaching weekend and after Wednesday. We can find the trend that people don't actually do more activities during weekend, Monday, and Tuesday as they do in Thursday, Wednesday, and Friday.
 
+- Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
 
+```{r}
+accel_df %>% ggplot(aes(x = day, y = counts, color = week)) +
+  geom_point(alpha = .5) +
+  viridis::scale_color_viridis(name = "week", 
+                               discrete = FALSE)
+```
+From the scatterplot, we can see the trend that most activities over the course of the day reside in previous weeks. With the weeks increasing, the counts start to decrease. Interestingly, people who do activities on Thursday presume their activity volume even till week 5.
