@@ -5,6 +5,7 @@ output: github_document
 
 ```{r setup}
 library(tidyverse)
+library(patchwork)
 library(p8105.datasets)
 data("instacart")
 ```
@@ -156,5 +157,47 @@ noaa_df %>%
   facet_grid(.~ month)
 ```
 Based on the plots, we can see that the average max temperature in January is around 0-5 degree Celsius; while in July, the average temperature is among 25-30 degree of Celsius. There is no significant outlier in both of the snowfall in January and July. 
+
+- Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); 
+```{r}
+temp_plot <- noaa_df %>% 
+  filter(!is.na(tmin), 
+         !is.na(tmax)) %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation", 
+    values_to = "temperatures"
+  ) %>% 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = .5) +
+  labs(title = "Maximum and minimum temperature in NY 1981-2010",
+       x = "degree of temperature (C)", 
+       y = "density of distribution")
+```
+
+
+and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
+
+```{r}
+snow_plot <- noaa_df %>% 
+  filter(snow > 0 & snow < 100) %>% 
+  mutate(year_cat = cut(year, breaks = c(1980, 1985, 1990, 1995, 2000, 2005, 2010), right = FALSE, labels = FALSE)) %>%
+  mutate(year_cat = recode(year_cat, `1` = "1981-1985",
+                                     `2` = "1986-1990",
+                                     `3` = "1991-1995",
+                                     `4` = "1996-2000",
+                                     `5` = "2001-2005",
+                                     `6` = "2006-2010")) %>%
+  drop_na() %>% 
+  ggplot(aes(x = snow, fill = year_cat, color = year_cat)) +
+  geom_density(alpha = 0.1) +
+  labs(title = "Density plot of Snowfall in NY, 1981-2010", 
+       x = "Snowfall (mm)", 
+       y = "Density") +
+  theme(legend.position = "bottom")
+
+temp_plot + snow_plot
+```
+
 
 
