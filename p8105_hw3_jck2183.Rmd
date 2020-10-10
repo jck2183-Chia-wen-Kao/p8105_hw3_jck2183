@@ -133,6 +133,8 @@ noaa_df <- ny_noaa %>%
          month = month.name[as.integer(month)], 
          year = as.integer(year))
 ```
+For snowfall, the most commonly observed values are 0, as the snowfall only occurred when the temperature is low enough and the humidity is abundant enough.  
+
 
 - Make a two-panel plot showing the average max temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
 
@@ -142,7 +144,7 @@ noaa_df %>%
   group_by(year, month) %>% 
   summarise(mean_temp = mean(tmax, na.rm = TRUE)) %>% 
   ggplot(aes(x = year, y = mean_temp)) +
-  geom_line() +
+  geom_line(size = 1) +
   facet_grid(.~ month)
 #Check the outlier with boxplot.
 noaa_df %>% 
@@ -153,6 +155,6 @@ noaa_df %>%
   geom_boxplot() +
   facet_grid(.~ month)
 ```
-
+Based on the plots, we can see that the average max temperature in January is around 0-5 degree Celsius; while in July, the average temperature is among 25-30 degree of Celsius. There is no significant outlier in both of the snowfall in January and July. 
 
 
